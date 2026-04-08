@@ -1,19 +1,11 @@
 import java.util.*;
-
-class InvalidCapacityException extends Exception {
-    InvalidCapacityException(String message) {
-        super(message);
-    }
-}
+import java.util.stream.*;
 
 class Bogie {
     String name;
     int capacity;
 
-    Bogie(String name, int capacity) throws InvalidCapacityException {
-        if (capacity <= 0) {
-            throw new InvalidCapacityException("Capacity must be greater than zero");
-        }
+    Bogie(String name, int capacity) {
         this.name = name;
         this.capacity = capacity;
     }
@@ -23,15 +15,19 @@ public class Trainconsistmanagementapp {
 
     public static void main(String[] args) {
 
-        try {
-            Bogie b1 = new Bogie("Sleeper", 72);
-            System.out.println("Created: " + b1.name + " - " + b1.capacity);
+        List<Bogie> bogies = new ArrayList<>();
 
-            Bogie b2 = new Bogie("AC Chair", -10); // invalid
-            System.out.println("Created: " + b2.name + " - " + b2.capacity);
+        bogies.add(new Bogie("Sleeper", 72));
+        bogies.add(new Bogie("AC Chair", 56));
+        bogies.add(new Bogie("First Class", 24));
 
-        } catch (InvalidCapacityException e) {
-            System.out.println("Error: " + e.getMessage());
+        List<Bogie> filteredBogies = bogies.stream()
+                .filter(b -> b.capacity > 60)
+                .collect(Collectors.toList());
+
+        System.out.println("Filtered Bogies (Capacity > 60):");
+        for (Bogie b : filteredBogies) {
+            System.out.println(b.name + " - " + b.capacity);
         }
     }
 }
