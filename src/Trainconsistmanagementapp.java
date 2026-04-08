@@ -1,11 +1,19 @@
 import java.util.*;
-import java.util.stream.*;
+
+class InvalidCapacityException extends Exception {
+    InvalidCapacityException(String message) {
+        super(message);
+    }
+}
 
 class Bogie {
     String name;
     int capacity;
 
-    Bogie(String name, int capacity) {
+    Bogie(String name, int capacity) throws InvalidCapacityException {
+        if (capacity <= 0) {
+            throw new InvalidCapacityException("Capacity must be greater than zero");
+        }
         this.name = name;
         this.capacity = capacity;
     }
@@ -15,35 +23,15 @@ public class Trainconsistmanagementapp {
 
     public static void main(String[] args) {
 
-        List<Bogie> bogies = new ArrayList<>();
+        try {
+            Bogie b1 = new Bogie("Sleeper", 72);
+            System.out.println("Created: " + b1.name + " - " + b1.capacity);
 
-        for (int i = 0; i < 1000; i++) {
-            bogies.add(new Bogie("Sleeper", 50 + i % 50));
+            Bogie b2 = new Bogie("AC Chair", -10); // invalid
+            System.out.println("Created: " + b2.name + " - " + b2.capacity);
+
+        } catch (InvalidCapacityException e) {
+            System.out.println("Error: " + e.getMessage());
         }
-
-        long startLoop = System.nanoTime();
-
-        List<Bogie> loopResult = new ArrayList<>();
-        for (Bogie b : bogies) {
-            if (b.capacity > 60) {
-                loopResult.add(b);
-            }
-        }
-
-        long endLoop = System.nanoTime();
-
-        long startStream = System.nanoTime();
-
-        List<Bogie> streamResult = bogies.stream()
-                .filter(b -> b.capacity > 60)
-                .collect(Collectors.toList());
-
-        long endStream = System.nanoTime();
-
-        System.out.println("Loop Time: " + (endLoop - startLoop) + " ns");
-        System.out.println("Stream Time: " + (endStream - startStream) + " ns");
-
-        System.out.println("Loop Result Size: " + loopResult.size());
-        System.out.println("Stream Result Size: " + streamResult.size());
     }
 }
