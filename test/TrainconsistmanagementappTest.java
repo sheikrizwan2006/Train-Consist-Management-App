@@ -4,44 +4,36 @@ import static org.junit.jupiter.api.Assertions.*;
 class TrainconsistmanagementappTest {
 
     @Test
-    void testBinarySearch_BogieFound() {
-        String[] arr = {"BG101","BG205","BG309","BG412","BG550"};
-        assertTrue(Trainconsistmanagementapp.binarySearch(arr, "BG309"));
-    }
-
-    @Test
-    void testBinarySearch_BogieNotFound() {
-        String[] arr = {"BG101","BG205","BG309","BG412","BG550"};
-        assertFalse(Trainconsistmanagementapp.binarySearch(arr, "BG999"));
-    }
-
-    @Test
-    void testBinarySearch_FirstElementMatch() {
-        String[] arr = {"BG101","BG205","BG309","BG412","BG550"};
-        assertTrue(Trainconsistmanagementapp.binarySearch(arr, "BG101"));
-    }
-
-    @Test
-    void testBinarySearch_LastElementMatch() {
-        String[] arr = {"BG101","BG205","BG309","BG412","BG550"};
-        assertTrue(Trainconsistmanagementapp.binarySearch(arr, "BG550"));
-    }
-
-    @Test
-    void testBinarySearch_SingleElementArray() {
-        String[] arr = {"BG101"};
-        assertTrue(Trainconsistmanagementapp.binarySearch(arr, "BG101"));
-    }
-
-    @Test
-    void testBinarySearch_EmptyArray() {
+    void testSearch_ThrowsExceptionWhenEmpty() {
         String[] arr = {};
-        assertFalse(Trainconsistmanagementapp.binarySearch(arr, "BG101"));
+        assertThrows(IllegalStateException.class, () -> {
+            Trainconsistmanagementapp.searchBogie(arr, "BG101");
+        });
     }
 
     @Test
-    void testBinarySearch_UnsortedInputHandled() {
-        String[] arr = {"BG309","BG101","BG550","BG205","BG412"};
-        assertTrue(Trainconsistmanagementapp.binarySearch(arr, "BG205"));
+    void testSearch_AllowsSearchWhenDataExists() {
+        String[] arr = {"BG101","BG205"};
+        assertDoesNotThrow(() -> {
+            Trainconsistmanagementapp.searchBogie(arr, "BG101");
+        });
+    }
+
+    @Test
+    void testSearch_BogieFoundAfterValidation() {
+        String[] arr = {"BG101","BG205","BG309"};
+        assertTrue(Trainconsistmanagementapp.searchBogie(arr, "BG205"));
+    }
+
+    @Test
+    void testSearch_BogieNotFoundAfterValidation() {
+        String[] arr = {"BG101","BG205","BG309"};
+        assertFalse(Trainconsistmanagementapp.searchBogie(arr, "BG999"));
+    }
+
+    @Test
+    void testSearch_SingleElementValidCase() {
+        String[] arr = {"BG101"};
+        assertTrue(Trainconsistmanagementapp.searchBogie(arr, "BG101"));
     }
 }
