@@ -1,13 +1,32 @@
-import java.util.*;
-import java.util.stream.*;
+class CargoSafetyException extends RuntimeException {
+    CargoSafetyException(String message) {
+        super(message);
+    }
+}
 
-class Bogie {
-    String name;
-    int capacity;
+class GoodsBogie {
+    String type;
+    String cargo;
 
-    Bogie(String name, int capacity) {
-        this.name = name;
-        this.capacity = capacity;
+    GoodsBogie(String type) {
+        this.type = type;
+    }
+
+    void assignCargo(String cargo) {
+        try {
+            if (type.equals("Rectangular") && cargo.equals("Petroleum")) {
+                throw new CargoSafetyException("Unsafe cargo assignment!");
+            }
+
+            this.cargo = cargo;
+            System.out.println("Cargo assigned: " + cargo);
+
+        } catch (CargoSafetyException e) {
+            System.out.println("Error: " + e.getMessage());
+
+        } finally {
+            System.out.println("Assignment attempt completed");
+        }
     }
 }
 
@@ -15,19 +34,13 @@ public class Trainconsistmanagementapp {
 
     public static void main(String[] args) {
 
-        List<Bogie> bogies = new ArrayList<>();
+        GoodsBogie b1 = new GoodsBogie("Cylindrical");
+        b1.assignCargo("Petroleum");   // ✅ safe
 
-        bogies.add(new Bogie("Sleeper", 72));
-        bogies.add(new Bogie("AC Chair", 56));
-        bogies.add(new Bogie("First Class", 24));
+        GoodsBogie b2 = new GoodsBogie("Rectangular");
+        b2.assignCargo("Petroleum");   // ❌ unsafe
 
-        List<Bogie> filteredBogies = bogies.stream()
-                .filter(b -> b.capacity > 60)
-                .collect(Collectors.toList());
-
-        System.out.println("Filtered Bogies (Capacity > 60):");
-        for (Bogie b : filteredBogies) {
-            System.out.println(b.name + " - " + b.capacity);
-        }
+        GoodsBogie b3 = new GoodsBogie("Rectangular");
+        b3.assignCargo("Coal");        // ✅ safe
     }
 }

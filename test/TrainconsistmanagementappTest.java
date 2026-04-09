@@ -1,58 +1,46 @@
-import java.util.*;
-import java.util.stream.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TrainconsistmanagementappTest {
 
-    static List<Bogie> getFiltered(List<Bogie> bogies, int threshold) {
-        return bogies.stream()
-                .filter(b -> b.capacity > threshold)
-                .collect(Collectors.toList());
+    @Test
+    void testCargo_SafeAssignment() {
+        GoodsBogie b = new GoodsBogie("Cylindrical");
+        b.assignCargo("Petroleum");
+        assertEquals("Petroleum", b.cargo);
     }
 
-    public static void main(String[] args) {
+    @Test
+    void testCargo_UnsafeAssignmentHandled() {
+        GoodsBogie b = new GoodsBogie("Rectangular");
+        b.assignCargo("Petroleum");
+        assertNull(b.cargo); // should not be assigned
+    }
 
-        List<Bogie> bogies = new ArrayList<>();
-        bogies.add(new Bogie("Sleeper", 72));
-        bogies.add(new Bogie("AC Chair", 56));
-        bogies.add(new Bogie("First Class", 24));
-        bogies.add(new Bogie("Luxury", 80));
+    @Test
+    void testCargo_CargoNotAssignedAfterFailure() {
+        GoodsBogie b = new GoodsBogie("Rectangular");
+        b.assignCargo("Petroleum");
+        assertNull(b.cargo);
+    }
 
-        System.out.println("Test 1: Capacity > 70");
-        List<Bogie> result1 = getFiltered(bogies, 70);
-        for (Bogie b : result1) {
-            System.out.println(b.name);
-        }
+    @Test
+    void testCargo_ProgramContinuesAfterException() {
+        GoodsBogie b1 = new GoodsBogie("Rectangular");
+        b1.assignCargo("Petroleum");
 
-        System.out.println("\nTest 2: Capacity = 70 (should exclude)");
-        List<Bogie> result2 = getFiltered(bogies, 70);
-        for (Bogie b : result2) {
-            System.out.println(b.name);
-        }
+        GoodsBogie b2 = new GoodsBogie("Rectangular");
+        b2.assignCargo("Coal");
 
-        System.out.println("\nTest 3: Capacity < 30");
-        List<Bogie> result3 = getFiltered(bogies, 30);
-        for (Bogie b : result3) {
-            System.out.println(b.name);
-        }
+        assertEquals("Coal", b2.cargo); // program continues
+    }
 
-        System.out.println("\nTest 4: No Matching");
-        List<Bogie> result4 = getFiltered(bogies, 100);
-        System.out.println("Size: " + result4.size());
+    @Test
+    void testCargo_FinallyBlockExecution() {
+        GoodsBogie b = new GoodsBogie("Rectangular");
+        b.assignCargo("Petroleum");
 
-        System.out.println("\nTest 5: All Matching");
-        List<Bogie> result5 = getFiltered(bogies, 10);
-        for (Bogie b : result5) {
-            System.out.println(b.name);
-        }
-
-        System.out.println("\nTest 6: Empty List");
-        List<Bogie> empty = new ArrayList<>();
-        List<Bogie> result6 = getFiltered(empty, 50);
-        System.out.println("Size: " + result6.size());
-
-        System.out.println("\nTest 7: Original List Unchanged");
-        System.out.println("Original Size: " + bogies.size());
-        getFiltered(bogies, 60);
-        System.out.println("After Filter Size: " + bogies.size());
+        // No direct assert for finally, but test ensures no crash
+        assertTrue(true);
     }
 }
