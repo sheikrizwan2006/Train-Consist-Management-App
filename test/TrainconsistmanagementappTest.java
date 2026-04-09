@@ -1,46 +1,40 @@
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TrainconsistmanagementappTest {
+class TrainconsistmanagementappTest {
 
     @Test
-    void testCargo_SafeAssignment() {
-        GoodsBogie b = new GoodsBogie("Cylindrical");
-        b.assignCargo("Petroleum");
-        assertEquals("Petroleum", b.cargo);
+    void testSort_BasicSorting() {
+        int[] arr = {72, 56, 24, 70, 60};
+        Trainconsistmanagementapp.bubbleSort(arr);
+        assertArrayEquals(new int[]{24, 56, 60, 70, 72}, arr);
     }
 
     @Test
-    void testCargo_UnsafeAssignmentHandled() {
-        GoodsBogie b = new GoodsBogie("Rectangular");
-        b.assignCargo("Petroleum");
-        assertNull(b.cargo); // should not be assigned
+    void testSort_AlreadySortedArray() {
+        int[] arr = {24, 56, 60, 70, 72};
+        Trainconsistmanagementapp.bubbleSort(arr);
+        assertArrayEquals(new int[]{24, 56, 60, 70, 72}, arr);
     }
 
     @Test
-    void testCargo_CargoNotAssignedAfterFailure() {
-        GoodsBogie b = new GoodsBogie("Rectangular");
-        b.assignCargo("Petroleum");
-        assertNull(b.cargo);
+    void testSort_DuplicateValues() {
+        int[] arr = {72, 56, 56, 24};
+        Trainconsistmanagementapp.bubbleSort(arr);
+        assertArrayEquals(new int[]{24, 56, 56, 72}, arr);
     }
 
     @Test
-    void testCargo_ProgramContinuesAfterException() {
-        GoodsBogie b1 = new GoodsBogie("Rectangular");
-        b1.assignCargo("Petroleum");
-
-        GoodsBogie b2 = new GoodsBogie("Rectangular");
-        b2.assignCargo("Coal");
-
-        assertEquals("Coal", b2.cargo); // program continues
+    void testSort_SingleElementArray() {
+        int[] arr = {50};
+        Trainconsistmanagementapp.bubbleSort(arr);
+        assertArrayEquals(new int[]{50}, arr);
     }
 
     @Test
-    void testCargo_FinallyBlockExecution() {
-        GoodsBogie b = new GoodsBogie("Rectangular");
-        b.assignCargo("Petroleum");
-
-        // No direct assert for finally, but test ensures no crash
-        assertTrue(true);
+    void testSort_AllEqualValues() {
+        int[] arr = {40, 40, 40};
+        Trainconsistmanagementapp.bubbleSort(arr);
+        assertArrayEquals(new int[]{40, 40, 40}, arr);
     }
 }
